@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Way - Splash Screen</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 20px;
+            animation: fade 2s ease-in-out infinite;
+        }
+        .welcome-text {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+        @keyframes fade {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <img src="static/images/logo.jpg" alt="Bright Way Logo" class="logo">
+        <div class="welcome-text">Welcome to Bright Way</div>
+        <div id="status"></div>
+    </div>
+
+    <!-- Include voice_assistant.js -->
+    <script src="static/js/voice_assistant.js"></script>
+
+    <script>
+        function initVoiceAssistantFunction() {
+            console.log('Initializing voice assistant...');
+            const synth = window.speechSynthesis;
+            if (synth) {
+                const introText = "Welcome to Bright Way. This application provides advanced object detection, vehicle detection, and text scanning features.";
+                const utterance = new SpeechSynthesisUtterance(introText);
+                utterance.volume = 1; // Set volume to the maximum
+
+                utterance.onstart = function() {
+                    console.log('Voice assistant started speaking.');
+                    document.getElementById('status').textContent = 'Voice assistant is speaking...';
+                };
+
+                utterance.onend = function() {
+                    console.log('Voice assistant finished speaking.');
+                    document.getElementById('status').textContent = 'Voice assistant finished speaking.';
+                    // Redirect to home.html after speech ends
+                    setTimeout(() => {
+                        window.location.href = '/home';
+                    }, 1000); // Short delay to ensure smooth transition
+                };
+
+                utterance.onerror = function(event) {
+                    console.error('Voice assistant error:', event.error);
+                    document.getElementById('status').textContent = 'Voice assistant error: ' + event.error;
+                };
+
+                synth.speak(utterance);
+            } else {
+                console.error('Speech synthesis not supported.');
+                document.getElementById('status').textContent = 'Speech synthesis not supported.';
+            }
+        }
+
+        // Automatically call the function when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Document loaded, calling voice assistant function...');
+            initVoiceAssistantFunction();
+        });
+    </script>
+</body>
+</html>
+

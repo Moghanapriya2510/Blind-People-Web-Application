@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+        }
+        #camera-feed {
+            width: 640px;
+            height: 340px;
+            border: 2px solid #fff;
+            display: block;
+            margin: 0 auto;
+        }
+        #back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Object Detection with Voice Assistant</h1>
+    <img id="camera-feed" src="/video_feed" alt="Camera Feed" />
+    <button id="back-button" onclick="window.location.href='home'">Go Back</button>
+
+    <script src="{{ url_for('static', filename='js/object_detection.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/object_detection.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright Way - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .feature-button {
+            margin: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 200px;
+        }
+        .feature-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="status" class="my-3"></div>
+    <button class="feature-button" onclick="navigateTo('object_detection')">Object Detection</button>
+    <button class="feature-button" onclick="navigateTo('vehicle_detection')">Vehicle Detection</button>
+    <button class="feature-button" onclick="navigateTo('text_scan')">Text Scanning</button>
+
+    <!-- Inline JavaScript for voice assistant -->
+    <script>
+        // Function to initialize and use voice assistant
+        function initVoiceAssistantFunction() {
+            console.log('Initializing voice assistant...');
+            const synth = window.speechSynthesis;
+            const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (synth) {
+                // Speak introductory message
+                const introText = "You are on the home page. Please select a feature.";
+                const utterance = new SpeechSynthesisUtterance(introText);
+                utterance.volume = 1; // Set volume to the maximum
+
+                utterance.onstart = function() {
+                    console.log('Voice assistant started speaking.');
+                    document.getElementById('status').textContent = 'Voice assistant is speaking...';
+                };
+
+                utterance.onend = function() {
+                    console.log('Voice assistant finished speaking.');
+                    document.getElementById('status').textContent = 'Voice assistant finished speaking.';
+                    startListening(); // Start listening for commands
+                };
+
+                utterance.onerror = function(event) {
+                    console.error('Voice assistant error:', event.error);
+                    document.getElementById('status').textContent = 'Voice assistant error: ' + event.error;
+                };
+
+                synth.speak(utterance);
+            } else {
+                console.error('Speech synthesis not supported.');
+                document.getElementById('status').textContent = 'Speech synthesis not supported.';
+            }
+
+            function startListening() {
+                if (recognition) {
+                    const recognizer = new recognition();
+                    recognizer.lang = 'en-US';
+                    recognizer.interimResults = false;
+
+                    recognizer.onresult = function(event) {
+                        const command = event.results[0][0].transcript.toLowerCase();
+                        console.log('Command received:', command);
+
+                        if (command.includes('object detection')) {
+                            handleNavigation('object_detection');
+                        } else if (command.includes('vehicle detection')) {
+                            handleNavigation('vehicledetection');
+                        } else if (command.includes('text scanning')) {
+                            handleNavigation('textscanning');
+                        } else {
+                            console.log('Command not recognized.');
+                        }
+                    };
+
+                    recognizer.onerror = function(event) {
+                        console.error('Speech recognition error:', event.error);
+                        document.getElementById('status').textContent = 'Speech recognition error: ' + event.error;
+                    };
+
+                    recognizer.start();
+                } else {
+                    console.error('Speech recognition not supported.');
+                    document.getElementById('status').textContent = 'Speech recognition not supported.';
+                }
+            }
+
+            function handleNavigation(feature) {
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance(`${feature.replace(/([a-z])([A-Z])/g, '$1 $2')} started.`);
+                utterance.volume = 1; // Set volume to the maximum
+
+                utterance.onend = function() {
+                    console.log(`${feature} started.`);
+                    document.getElementById('status').textContent = `${feature} started.`;
+                    window.location.href = `/${feature}`;
+                };
+
+                utterance.onerror = function(event) {
+                    console.error('Voice assistant error:', event.error);
+                    document.getElementById('status').textContent = 'Voice assistant error: ' + event.error;
+                };
+
+                synth.speak(utterance);
+            }
+        }
+
+        // Initialize voice assistant when the document is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Document loaded, calling voice assistant function...');
+            const status = document.getElementById('status');
+            status.textContent = 'Initializing voice assistant...';
+            initVoiceAssistantFunction();
+        });
+
+        // Function to handle navigation based on feature
+        function navigateTo(feature) {
+            window.location.href = `/${feature}`;
+        }
+    </script>
+</body>
+</html>
